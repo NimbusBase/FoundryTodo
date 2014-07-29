@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>NimbusBase Founder</title>
+
+	<!-- <link href="dist/css/default.css" rel="stylesheet" /> -->
+
+	<!--<script src='vendor/base64utils.js' ></script>
+	<script src='vendor/jquery.min.js' ></script>
+	<script src='vendor/underscore-min.js' ></script>
+	<script src='vendor/moment.min.js' ></script>
+	<script src='vendor/angular.min.js' ></script>
+	<script src='vendor/angular-sanitize.min.js' ></script>
+	<script src='vendor/angular-route.js' ></script>
+	<script src='vendor/spinjs/spin.js' ></script>
+	<script src='vendor/iosOverlay.min.js' ></script>
+	<script src='vendor/nimbus.min.js' ></script>
+	<script src='vendor/require.js' ></script>
+	<script src='vendor/dialog.js' ></script>
+	<script src='vendor/bootstrap.js' ></script>
+	<script src='vendor/bootstrap-tab.js' ></script>
+	<script src='vendor/bootbox.min.js' ></script>
+	<script src='vendor/bootstrap-wysihtml5/js/wysihtml5-0.3.0.min.js' ></script>
+	<script src='vendor/bootstrap-wysihtml5/js/bootstrap-wysihtml5.js' ></script>
+	<script src='vendor/bootstrap-wysihtml5/js/custom_image_and_upload_wysihtml5.js' ></script>
+	<script src='vendor/ngDialog/js/ngDialog.min.js' ></script>
+	 // <script src='vendor/ui-bootstrap/*.js' ></script> -->
+
+	<script src="dist/main.js"></script>
+
+	<script src="app/app.js"></script>
+
+</head>
+<body>
+	<body>
+		<!-- /.navbar -->
+		<ul class="menu" ng-cloak>
+			<li ng-hide="_plugin.hide_plugin" ng-repeat="_plugin in _plugins | orderBy:'order':false" ng-class="{active:'#'+_active_app_path==_plugin.anchor}">
+				<a href="{{_plugin.anchor}}"><span><i class="{{_plugin.icon}}" ></i>{{_plugin.title}}</span></a>
+			</li>
+		</ul>
+		<div class="page-wrap">
+			<ng-view ng-cloak></ng-view>
+		</div>
+
+	</body>
+</html>
