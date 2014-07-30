@@ -31,8 +31,7 @@ module.exports = function(grunt) {
           'core/plugins/user/*.js',
           'core/plugins/workspace/*.js',
           'core/directives/*.js',
-          'core/filters/*.js',
-          'core/analytic.js'
+          'core/filters/*.js'
         ],
         dest : 'dist/core.js'
       },
@@ -60,7 +59,8 @@ module.exports = function(grunt) {
               'vendor/ui-bootstrap/*.js',
               'dist/mailComposer.min.js',
               // 'dist/app.js',
-              'dist/core.js'],
+              'dist/core.js'
+              ],
         dest: 'dist/main.js'
       }
     },
