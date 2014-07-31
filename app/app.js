@@ -5,7 +5,7 @@
     window.location.reload();
   }
 
-  enterprise.angular.dependency = [];
+  foundry.angular.dependency = [];
 
   define('config', function() {
     var config;
@@ -13,14 +13,13 @@
     config.appName = 'Forum';
     config.plugins = {
       Todo: 'app/plugins/todo',
-      document: 'core/plugins/document',
       user: 'core/plugins/user',
       workspace: 'core/plugins/workspace'
     };
     return config;
   });
 
-  enterprise.load_plugins();
+  foundry.load_plugins();
 
   Nimbus.Auth.setup({
     'GDrive': {
@@ -38,9 +37,9 @@
     }
   };
 
-  enterprise.ready(function() {
+  foundry.ready(function() {
     if (Nimbus.Auth.authorized()) {
-      enterprise.init(function() {
+      foundry.init(function() {
         $('#loading').addClass('loaded');
         return $("#login_buttons").removeClass("redirect");
       });
@@ -56,7 +55,7 @@
       return Nimbus.Auth.authorize('GDrive');
     });
     $('.logout_btn').on('click', function(evt) {
-      enterprise.logout();
+      foundry.logout();
       return location.reload();
     });
   });
