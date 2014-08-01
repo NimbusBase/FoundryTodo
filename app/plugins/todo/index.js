@@ -43,7 +43,7 @@ function define_controller(){
     }
 
     $scope.delete_todo = function(index){
-        var id = $scope.todods[index].id,
+        var id = $scope.todos[index].id,
             todo =todo_model.findByAttribute('id', id);
 
         todo.destroy();
