@@ -130,9 +130,9 @@ bootWysiOverrides = {
           Nimbus.Binary.upload_file(file, function(file){
             if(file){
               // save file into enterprise
-              enterprise._plugins.document.set(file._file.id, file._file);
+              foundry_plugins.document.set(file._file.id, file._file);
 
-              enterprise.set_file_public(file._file.id);
+              foundryset_file_public(file._file.id);
               $('.uploadresult').html('Upload Complete').removeClass('alert-info').addClass('alert-success');
               // insert image
               insertImage({url:file.directlink,caption:file.name,id:file._file.id});
@@ -232,7 +232,7 @@ $(function() {
     }
   };
 
-  enterprise.wysiwygOptions = wysiwygOptions;
+  foundrywysiwygOptions = wysiwygOptions;
   $('.tip').tooltip();
   $('textarea.wysi').each(function() {
     $(this).wysihtml5($.extend(wysiwygOptions, {html:true, color:false, stylesheets:[]}));
