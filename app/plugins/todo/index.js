@@ -28,7 +28,7 @@ function define_controller(){
   angular.module('enterprise').controller('TodoController', ['$scope', function($scope){
     $scope.todos = [];
     // get a reference with the model we registered above
-    todo_model = foundry_models.Todo
+    todo_model = foundry._models.Todo
 
     $scope.load = function(){
         $scope.todos = todo_model.all()

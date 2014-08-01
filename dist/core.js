@@ -104,16 +104,16 @@
           '$rootScope', '$location', function($rootScope, $location) {
             var inex, _plugin, _ref;
             $rootScope._plugins = [];
-            _ref = foundry_plugins;
+            _ref = foundry._plugins;
             for (inex in _ref) {
               _plugin = _ref[inex];
               $rootScope._plugins.push(_plugin);
             }
             $rootScope._active_app_path = '';
-            $rootScope._current_global_user = foundry_current_user;
+            $rootScope._current_global_user = foundry._current_user;
             $rootScope.$on('$locationChangeSuccess', function(evt, new_path, old_path) {
               var default_path;
-              default_path = localStorage.default_plugin || foundrydefault_plugin;
+              default_path = localStorage.default_plugin || foundry.default_plugin;
               if (default_path && !$location.path()) {
                 $location.path(default_path);
               } else if (!$location.path()) {
@@ -363,12 +363,12 @@
 
   core.set_setting = function(key, value) {
     var my_settings, x;
-    my_settings = foundrysettings.select(function(item) {
-      return item.userid === foundry_current_user.id && item.setting_name === key;
+    my_settings = foundry.settings.select(function(item) {
+      return item.userid === foundry._current_user.id && item.setting_name === key;
     });
     if (my_settings.length === 0) {
-      return foundrysettings.create({
-        "userid": foundry_current_user.id,
+      return foundry.settings.create({
+        "userid": foundry._current_user.id,
         "setting_name": key,
         "setting_value": value
       });
@@ -388,8 +388,8 @@
 
   core.get_setting = function(key) {
     var setting;
-    setting = foundrysettings.select(function(item) {
-      return item.userid === foundry_current_user.id && item.setting_name === key;
+    setting = foundry.settings.select(function(item) {
+      return item.userid === foundry._current_user.id && item.setting_name === key;
     });
     if (setting.length > 0) {
       return setting[0].setting_value;
@@ -400,7 +400,7 @@
 
   core.get_setting_all = function(userid, key) {
     var setting;
-    setting = foundrysettings.select(function(item) {
+    setting = foundry.settings.select(function(item) {
       return item.userid === userid && item.setting_name === key;
     });
     if (setting.length > 0) {
@@ -466,7 +466,7 @@
         self = this;
         name = 'Document';
         attributes = ["id", "title", "timestamp"];
-        foundrymodel(name, attributes, function(model) {
+        foundry.model(name, attributes, function(model) {
           model.onUpdate(function(mode, obj, isLocal) {
             if (mode === 'CREATE' && !isLocal) {
               return self.all_file(function() {
@@ -478,7 +478,7 @@
             }
           });
           return self.all_file(function() {
-            return foundryinitialized(self.name);
+            return foundry.initialized(self.name);
           });
         });
         define_controller();
@@ -517,7 +517,7 @@
         var doc, model;
         if (!this._documents[id]) {
           this._documents[id] = data;
-          model = foundry_models.Document;
+          model = foundry._models.Document;
           doc = model.create({
             title: data.title,
             id: data.id,
@@ -534,7 +534,7 @@
       '$scope', '$rootScope', 'ngDialog', '$enterprise', '$timeout', function($scope, $rootScope, ngDialog, $enterprise, $timeout) {
         var file_module;
         $rootScope.breadcum = 'Documents';
-        file_module = foundryload('document');
+        file_module = foundry.load('document');
         file_module.controller_scope = $scope;
         $scope.load = function(callback) {
           $scope.files = file_module._documents;
@@ -542,7 +542,7 @@
         $scope.choosed_file = null;
         $scope.upload_document = function() {
           var spinner;
-          spinner = $foundryspinner({
+          spinner = $foundry.spinner({
             type: 'loading',
             text: 'Uploading '
           });
@@ -557,7 +557,7 @@
         $scope.delete_document = function(index) {
           var file, spinner;
           file = $scope.files[index];
-          spinner = $foundryspinner({
+          spinner = $foundry.spinner({
             type: 'loading',
             text: 'Deleteing...'
           });
@@ -597,9 +597,9 @@
         name = 'User';
         attributes = ['pid', 'name', 'role', 'email', 'pic', 'debug', 'not_first_login', 'initied', 'rated', 'last_login_time'];
         this._models['user'] = {};
-        foundrymodel(name, attributes, function(model) {
+        foundry.model(name, attributes, function(model) {
           self._models['user'] = model;
-          foundryinitialized(self.name);
+          foundry.initialized(self.name);
         });
       },
       inited: function() {
@@ -607,12 +607,12 @@
         analytic.init();
         this.check_users();
         self = this;
-        user_model = foundry_models['User'];
-        _ref = foundry_user_list;
+        user_model = foundry._models['User'];
+        _ref = foundry._user_list;
         for (id in _ref) {
           user = _ref[id];
           if (user.id === c_file.owners[0].permissionId) {
-            foundry_current_owner = user;
+            foundry._current_owner = user;
           }
         }
         this.get_user_plan(function(plan) {
@@ -628,7 +628,7 @@
             expired = moment(plan.order.date).add('y', 1) < moment.valueOf();
             status = plan.order.status;
           }
-          if (foundry_current_user.id !== foundry_current_owner.id) {
+          if (foundry._current_user.id !== foundry._current_owner.id) {
             return;
           }
           if (status === 0) {
@@ -649,8 +649,8 @@
       },
       check_users: function() {
         var data, one, pid, user, user_model, _i, _len, _ref, _ref1;
-        user_model = foundry_models['User'];
-        console.log('user list total :' + keys(foundry_user_list).length + ', user model total: ' + user_model.all().length);
+        user_model = foundry._models['User'];
+        console.log('user list total :' + keys(foundry._user_list).length + ', user model total: ' + user_model.all().length);
         _ref = user_model.all();
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           user = _ref[_i];
@@ -658,7 +658,7 @@
             user.destroy();
           }
         }
-        _ref1 = foundry_user_list;
+        _ref1 = foundry._user_list;
         for (pid in _ref1) {
           user = _ref1[pid];
           one = user_model.findByAttribute('pid', pid);
@@ -685,15 +685,15 @@
             } else {
               data.role = 'Viewer';
             }
-            if (pid === foundry_current_user.id) {
+            if (pid === foundry._current_user.id) {
               data.email = window.user_email;
             }
-            data.debug = user_email + ':' + 'time: ' + new Date() + JSON.stringify(foundry_models.User.all());
+            data.debug = user_email + ':' + 'time: ' + new Date() + JSON.stringify(foundry._models.User.all());
             user_model.create(data);
             user.roleName = data.role;
           }
           one = user_model.findByAttribute('pid', pid);
-          if (pid === foundry_current_user.id) {
+          if (pid === foundry._current_user.id) {
             if (!one.not_first_login) {
               one.not_first_login = 1;
               one.save();
@@ -722,9 +722,9 @@
           }
         });
         return analytic.user({
-          email: foundry_current_user.email,
+          email: foundry._current_user.email,
           user: data.email,
-          id: foundry_current_user.id
+          id: foundry._current_user.id
         });
       },
       add_share: function(user, callback) {
@@ -740,7 +740,7 @@
               t.pic = u.pic;
               t.save();
             }
-            foundry_user_list[u.id] = {
+            foundry._user_list[u.id] = {
               name: u.name,
               pic: u.pic,
               roleName: user.role,
@@ -763,7 +763,7 @@
       },
       save_user: function(id, data) {
         var user;
-        user = foundry_user_list[id];
+        user = foundry._user_list[id];
         user.roleName = data.role;
         user = this._models['user'].findByAttribute('pid', id);
         if (user) {
@@ -783,13 +783,13 @@
         var i, id, recipients, user, _ref;
         recipients = '';
         i = 0;
-        _ref = foundry_user_list;
+        _ref = foundry._user_list;
         for (id in _ref) {
           user = _ref[id];
-          if (user.email === foundry_current_user.email) {
+          if (user.email === foundry._current_user.email) {
             continue;
           }
-          if ((foundryget_setting_all(id, "email") != null) && foundryget_setting_all(id, "email") === false) {
+          if ((foundry.get_setting_all(id, "email") != null) && foundry.get_setting_all(id, "email") === false) {
             continue;
           }
           if (i === 0 && user.email) {
@@ -805,17 +805,17 @@
       get_user_plan: function(callback) {
         var self, url;
         self = this;
-        url = "http://192.241.167.76:4000/order/" + foundry_current_owner.id + "/" + foundry_current_owner.email;
+        url = "http://192.241.167.76:4000/order/" + foundry._current_owner.id + "/" + foundry._current_owner.email;
         return $.ajax({
           'url': url,
           success: function(data) {
             var user;
             if (data) {
               user = data;
-              self.user_plan = foundry_owner_plan = Number(user.order.type);
+              self.user_plan = foundry._owner_plan = Number(user.order.type);
             } else {
               user = false;
-              self.user_plan = foundry_owner_plan = 0;
+              self.user_plan = foundry._owner_plan = 0;
             }
             if (callback) {
               return callback(user);
@@ -886,19 +886,19 @@
     return angular.module('enterprise').controller('UserListController', [
       '$scope', '$rootScope', '$parse', function($scope, $rootScope, $parse) {
         var current_user, update_current_user_permission, user_model;
-        user_model = foundryload('user');
-        $scope.users = foundry_user_list;
+        user_model = foundry.load('user');
+        $scope.users = foundry._user_list;
 
         /*
         			basic settings
          */
         $rootScope.breadcum = 'Users';
         $rootScope.shortcut_name = 'Add User';
-        current_user = foundry_current_user;
+        current_user = foundry._current_user;
         $scope.user_permission = 'Viewer';
         update_current_user_permission = function() {
           var current_user_in_model;
-          current_user_in_model = foundry_models.User.findByAttribute('pid', current_user.id);
+          current_user_in_model = foundry._models.User.findByAttribute('pid', current_user.id);
           if (current_user_in_model) {
             return $scope.user_permission = current_user_in_model.role;
           }
@@ -963,7 +963,7 @@
         };
         $scope.del_user = function(id) {
           user_model.del_user($scope.users[id]);
-          return delete foundry_user_list[id];
+          return delete foundry._user_list[id];
         };
         $scope.creating_user = false;
         $scope.submit = function() {
@@ -1001,7 +1001,7 @@
           $('.userinfo').modal();
         };
         $scope.is_owner = function(user) {
-          return user.id === foundry_current_owner.id;
+          return user.id === foundry._current_owner.id;
         };
         $scope.clear = function() {
           $('.modal').modal('hide');
@@ -1038,22 +1038,22 @@
           });
         } else {
           localStorage['last_opened_workspace'] = c_file.id;
-          foundryshared_users(function(users) {
+          foundry.shared_users(function(users) {
             var _users;
             _users = users;
-            return foundrycurrent_user(function(me) {
+            return foundry.current_user(function(me) {
               var user, _i, _len;
               for (_i = 0, _len = _users.length; _i < _len; _i++) {
                 user = _users[_i];
                 if (user.id === me.id) {
-                  foundry_current_user.role = user.role;
+                  foundry._current_user.role = user.role;
                 }
               }
-              if (!foundry_current_user.email) {
-                foundry_current_user.email = Nimbus.Share.get_user_email();
+              if (!foundry._current_user.email) {
+                foundry._current_user.email = Nimbus.Share.get_user_email();
               }
               console.log(_users);
-              return foundryinitialized(self.name);
+              return foundry.initialized(self.name);
             });
           });
         }
@@ -1092,7 +1092,7 @@
           angular.element(document).scope().$apply();
           ga('set', 'dimension2', c_file.title);
           ga('set', 'dimension3', c_file.owners[0].emailAddress + ':' + c_file.owners[0].displayName);
-          ga('set', 'dimension4', foundry_models.User.all());
+          ga('set', 'dimension4', foundry._models.User.all());
         });
       },
       create: function(name, callback) {
@@ -1108,8 +1108,8 @@
           angular.element(document).scope().$apply();
         });
         analytic.owner({
-          id: foundry_current_user.id,
-          email: foundry_current_user.email,
+          id: foundry._current_user.id,
+          email: foundry._current_user.email,
           date: new Date().getTime(),
           'name': name
         });
@@ -1231,7 +1231,7 @@
     return angular.module('enterprise').controller('ProjectController', [
       '$scope', '$rootScope', 'ngDialog', '$enterprise', function($scope, $rootScope, ngDialog, $enterprise) {
         var docModule;
-        docModule = foundryload('workspace');
+        docModule = foundry.load('workspace');
         $rootScope.breadcum = 'Workspace';
         $scope.filename = '';
         $scope.current_edit = -1;
@@ -1252,7 +1252,7 @@
         $scope.create_doc = function() {
           var spinner;
           ngDialog.close();
-          spinner = $foundryspinner({
+          spinner = $foundry.spinner({
             type: 'loading',
             text: 'Creating ' + $scope.filename + '...'
           });
@@ -1285,7 +1285,7 @@
         $scope["switch"] = function(index) {
           var doc, spinner;
           $scope.current_doc = doc = $scope.projects[index];
-          spinner = $foundryspinner({
+          spinner = $foundry.spinner({
             type: 'loading',
             text: 'Switching...'
           });
@@ -1298,7 +1298,7 @@
         $scope.rename = function() {
           var doc, spinner;
           doc = $scope.projects[$scope.current_edit];
-          spinner = $foundryspinner({
+          spinner = $foundry.spinner({
             type: 'loading',
             text: 'Renaming...'
           });
@@ -1327,10 +1327,10 @@
     var api, get_owner_space_count, init, send_login_event, send_owner_event, send_user_event;
     init = function() {
       ga('create', 'UA-46950334-2', {
-        'userId': foundry_current_user.email
+        'userId': foundry._current_user.email
       });
       ga('require', 'displayfeatures');
-      ga('set', 'dimension1', foundry_current_user.email);
+      ga('set', 'dimension1', foundry._current_user.email);
       ga('set', 'dimension2', c_file.title);
       ga('set', 'dimension3', c_file.owners[0].emailAddress + ':' + c_file.owners[0].displayName);
       return ga('send', 'pageview');
@@ -1341,7 +1341,7 @@
       _ref = window.app_files;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         space = _ref[_i];
-        if (space.owners[0].permissionId === foundry_current_user.id) {
+        if (space.owners[0].permissionId === foundry._current_user.id) {
           count++;
         }
       }
@@ -1360,7 +1360,7 @@
       if (!ga) {
         return;
       }
-      count = foundry_models.User.all().length;
+      count = foundry._models.User.all().length;
       return ga('send', 'event', 'forum_owner_operation:' + data.email, 'share_workspace:' + data.user, count);
     };
     send_login_event = function(data) {};
@@ -1401,7 +1401,7 @@
             return angular.element(elm).scope().$apply();
           }, 0);
         };
-        editor = $(elm).wysihtml5($.extend(foundrywysiwygOptions, {
+        editor = $(elm).wysihtml5($.extend(foundry.wysiwygOptions, {
           stylesheets: [],
           events: {
             'change': update,
@@ -1628,7 +1628,7 @@
               console.log(error);
               return;
             }
-            currentUserEmail = foundry_current_user.email;
+            currentUserEmail = foundry._current_user.email;
             return sendMessage(email, function() {
               console.log("gmail sent to others");
               console.log(arguments);
