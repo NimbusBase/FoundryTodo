@@ -36452,7 +36452,7 @@ bootWysiOverrides = {
           insertButton.attr('disabled',true);
           Nimbus.Binary.upload_file(file, function(file){
             if(file){
-              // save file into enterprise
+              // save file into foundry
               foundry._plugins.document.set(file._file.id, file._file);
 
               foundry.set_file_public(file._file.id);
@@ -36657,7 +36657,7 @@ angular.module("ui.bootstrap",["ui.bootstrap.tpls","ui.bootstrap.alert","ui.boot
           self._plugins[plugin.name] = plugin;
         }
         dependency = self.angular.dependency.concat(['enterpise-ui', 'ngRoute']);
-        angular.module('enterprise', dependency).config([
+        angular.module('foundry', dependency).config([
           '$routeProvider', function($routeProvider) {
             var path, route, _ref;
             _ref = main.paths;
@@ -36745,7 +36745,7 @@ angular.module("ui.bootstrap",["ui.bootstrap.tpls","ui.bootstrap.alert","ui.boot
         }
       }
       if (!self.bootstraped) {
-        angular.bootstrap(document, ['enterprise']);
+        angular.bootstrap(document, ['foundry']);
         self.bootstraped = true;
       }
       if (callback) {
@@ -36895,9 +36895,9 @@ angular.module("ui.bootstrap",["ui.bootstrap.tpls","ui.bootstrap.alert","ui.boot
 
 
   /*
-  	enterprise market
+  	foundry market
   	path /apps/licensing/v1/product
-  	function for enterprise license, to get the license for current user
+  	function for foundry license, to get the license for current user
   
   	response
   
@@ -37010,7 +37010,7 @@ angular.module("ui.bootstrap",["ui.bootstrap.tpls","ui.bootstrap.alert","ui.boot
     return dict;
   };
 
-  window.enterprise = window.foundry = core;
+  window.foundry = window.foundry = core;
 
 }).call(this);
 
@@ -37098,8 +37098,8 @@ angular.module("ui.bootstrap",["ui.bootstrap.tpls","ui.bootstrap.alert","ui.boot
   });
 
   define_controller = function() {
-    return angular.module('enterprise').controller('DocumentController', [
-      '$scope', '$rootScope', 'ngDialog', '$enterprise', '$timeout', function($scope, $rootScope, ngDialog, $enterprise, $timeout) {
+    return angular.module('foundry').controller('DocumentController', [
+      '$scope', '$rootScope', 'ngDialog', '$foundry', '$timeout', function($scope, $rootScope, ngDialog, $foundry, $timeout) {
         var file_module;
         $rootScope.breadcum = 'Documents';
         file_module = foundry.load('document');
@@ -37451,7 +37451,7 @@ angular.module("ui.bootstrap",["ui.bootstrap.tpls","ui.bootstrap.alert","ui.boot
   });
 
   inject_controller = function() {
-    return angular.module('enterprise').controller('UserListController', [
+    return angular.module('foundry').controller('UserListController', [
       '$scope', '$rootScope', '$parse', function($scope, $rootScope, $parse) {
         var current_user, update_current_user_permission, user_model;
         user_model = foundry.load('user');
@@ -37796,8 +37796,8 @@ angular.module("ui.bootstrap",["ui.bootstrap.tpls","ui.bootstrap.alert","ui.boot
   });
 
   define_controller = function() {
-    return angular.module('enterprise').controller('ProjectController', [
-      '$scope', '$rootScope', 'ngDialog', '$enterprise', function($scope, $rootScope, ngDialog, $enterprise) {
+    return angular.module('foundry').controller('ProjectController', [
+      '$scope', '$rootScope', 'ngDialog', '$foundry', function($scope, $rootScope, ngDialog, $foundry) {
         var docModule;
         docModule = foundry.load('workspace');
         $rootScope.breadcum = 'Workspace';
@@ -38135,7 +38135,7 @@ angular.module("ui.bootstrap",["ui.bootstrap.tpls","ui.bootstrap.alert","ui.boot
         return elm.bind("change", changed);
       };
     }
-  ]).factory('$enterprise', [
+  ]).factory('$foundry', [
     '$http', function($http) {
       var service;
       service = {

@@ -129,7 +129,7 @@ bootWysiOverrides = {
           insertButton.attr('disabled',true);
           Nimbus.Binary.upload_file(file, function(file){
             if(file){
-              // save file into enterprise
+              // save file into foundry
               foundry._plugins.document.set(file._file.id, file._file);
 
               foundry.set_file_public(file._file.id);
